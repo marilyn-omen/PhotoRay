@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Xna.Framework.Media;
@@ -9,39 +10,30 @@ namespace PhotoSight
     {
         #region Dependency properties
 
-        #region List<Picture> Pictures
+        #region LoopingPicturesDataSource PicturesSource
 
-        public List<Picture> Pictures
+        public LoopingPicturesDataSource PicturesSource
         {
-            get { return (List<Picture>)GetValue(PicturesProperty); }
-            set { SetValue(PicturesProperty, value); }
+            get { return (LoopingPicturesDataSource)GetValue(PicturesSourceProperty); }
+            set { SetValue(PicturesSourceProperty, value); }
         }
 
-        public static readonly DependencyProperty PicturesProperty =
+        public static readonly DependencyProperty PicturesSourceProperty =
             DependencyProperty.Register(
-                "Pictures", typeof (List<Picture>), typeof (PhotoView), new PropertyMetadata(null));
+                "PicturesSource", typeof(LoopingPicturesDataSource), typeof(PhotoView), new PropertyMetadata(null));
 
         #endregion
 
-        #region Picture SelectedPicture
-        
-        public Picture SelectedPicture
+        #region bool IsUploading
+
+        public bool IsUploading
         {
-            get { return (Picture)GetValue(SelectedPictureProperty); }
-            set { SetValue(SelectedPictureProperty, value); }
+            get { return (bool)GetValue(IsUploadingProperty); }
+            set { SetValue(IsUploadingProperty, value); }
         }
 
-        public static readonly DependencyProperty SelectedPictureProperty =
-            DependencyProperty.Register(
-                "SelectedPicture",
-                typeof (Picture),
-                typeof (PhotoView),
-                new PropertyMetadata(null, SelectedPicturePropertyChanged));
-
-        private static void SelectedPicturePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((PhotoView) d).OnSelectedPictureChanged();
-        }
+        public static readonly DependencyProperty IsUploadingProperty =
+            DependencyProperty.Register("IsUploading", typeof (bool), typeof (PhotoView), new PropertyMetadata(false));
 
         #endregion
 
@@ -52,20 +44,30 @@ namespace PhotoSight
             InitializeComponent();
         }
 
-        private void OnSelectedPictureChanged()
+        private void UploadPicture(Picture picture)
         {
-            if (SelectedPicture != null)
+            if (picture != null && !IsUploading)
             {
-                var post = new PostSubmitter
+                var worker = new BackgroundWorker();
+                worker.DoWork += (sender, args) =>
                     {
-                        Url = "http://sltv.org.ua/upload.php",
-                        Parameters = new Dictionary<string, object>
+                        var post = new PostSubmitter
+                        {
+                            Url = "http://sltv.org.ua/upload.php",
+                            Parameters = new Dictionary<string, object>
                             {
                                 {"sid", App.Sid},
-                                {"uploadedfile", Utils.StreamToByteArray(SelectedPicture.GetImage())}
+                                {"uploadedfile", Utils.StreamToByteArray(((Picture) args.Argument).GetImage())}
                             }
+                        };
+                        post.Submit();
                     };
-                post.Submit();
+                worker.RunWorkerCompleted += (sender, args) =>
+                    {
+                        IsUploading = false;
+                    };
+                IsUploading = true;
+                worker.RunWorkerAsync(picture);
             }
         }
 
@@ -81,8 +83,15 @@ namespace PhotoSight
 
             if (App.SelectedPicture != null && !string.IsNullOrWhiteSpace(App.Sid))
             {
-                Pictures = new List<Picture>(App.SelectedPicture.Album.Pictures);
-                SelectedPicture = App.SelectedPicture;
+                UploadPicture(App.SelectedPicture);
+                PicturesSource = new LoopingPicturesDataSource(new List<Picture>(App.SelectedPicture.Album.Pictures));
+                PicturesSource.SelectionChanged += (sender, args) =>
+                    {
+                        if (args.AddedItems.Count > 0)
+                        {
+                            UploadPicture(args.AddedItems[0] as Picture);
+                        }
+                    };
             }
         }
 

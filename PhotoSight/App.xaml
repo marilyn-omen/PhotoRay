@@ -15,6 +15,13 @@
             <converters:PictureToBitmapConverter x:Key="PictureToThumbnail"
                                                 Thumbnail="True" />
             <converters:PictureCollectionToQuadsConverter x:Key="PicturesToQuads" />
+            <converters:BooleanToVisibilityConverter x:Key="VisibleIfTrue" />
+            <converters:BooleanToVisibilityConverter x:Key="VisibleIfFalse"
+                                                     Invert="True" />
+            <converters:BooleanInverterConverter x:Key="BooleanInvert" />
+            <converters:BooleanToDoubleConverter x:Key="BoolToOpacity"
+                                                 TrueValue="0.5"
+                                                 FalseValue="1" />
         </ResourceDictionary>
     </Application.Resources>
     <Application.ApplicationLifetimeObjects>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -39,7 +40,7 @@ namespace PhotoSight
 
             App.SelectedPicture = null;
             var lib = new MediaLibrary();
-            Albums = new List<PictureAlbum>(lib.RootPictureAlbum.Albums);
+            Albums = lib.RootPictureAlbum.Albums.Where(album => album.Pictures.Count != 0).ToList();
         }
 
         private void OnPhotoTap(object sender, GestureEventArgs e)

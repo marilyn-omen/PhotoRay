@@ -6,8 +6,7 @@
                             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                            xmlns:wpcontrols="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
-                            xmlns:wpPrimitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone.Controls"
+                            xmlns:toolkitPrimitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone.Controls.Toolkit"
                             FontFamily="{StaticResource PhoneFontFamilyNormal}"
                             FontSize="{StaticResource PhoneFontSizeNormal}"
                             Foreground="{StaticResource PhoneForegroundBrush}"
@@ -33,21 +32,23 @@
         <Grid x:Name="ContentPanel"
               Grid.Row="1"
               Margin="12,0,12,0">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                <ListBox ItemsSource="{Binding Path=Pictures, ElementName=_this}"
-                         SelectedItem="{Binding Path=SelectedPicture, ElementName=_this, Mode=TwoWay}">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Image Source="{Binding ., Converter={StaticResource PictureToBitmap}}" />
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </ScrollViewer>
+            <toolkitPrimitives:LoopingSelector DataSource="{Binding Path=PicturesSource, ElementName=_this}"
+                                               ItemSize="480,480"
+                                               IsExpanded="True"
+                                               IsEnabled="{Binding Path=IsUploading, ElementName=_this, Converter={StaticResource BooleanInvert}}"
+                                               Opacity="{Binding Path=IsUploading, ElementName=_this, Converter={StaticResource BoolToOpacity}}">
+                <toolkitPrimitives:LoopingSelector.ItemTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding ., Converter={StaticResource PictureToBitmap}}" />
+                    </DataTemplate>
+                </toolkitPrimitives:LoopingSelector.ItemTemplate>
+            </toolkitPrimitives:LoopingSelector>
+            <ProgressBar Visibility="{Binding Path=IsUploading, ElementName=_this, Converter={StaticResource VisibleIfTrue}}"
+                         IsEnabled="{Binding Path=IsUploading, ElementName=_this}"
+                         Width="480"
+                         IsIndeterminate="True"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
         </Grid>
     </Grid>
 </phone:PhoneApplicationPage>
