@@ -54,6 +54,10 @@ namespace PhotoSight
         {
             base.OnNavigatedTo(e);
 
+            /*App.Sid = "test";
+            NavigationService.Navigate(new Uri("/AlbumView.xaml", UriKind.RelativeOrAbsolute));
+            return;*/
+
             App.Sid = null;
             _photoCamera = new PhotoCamera();
             _photoCamera.Initialized += OnPhotoCameraInitialized;

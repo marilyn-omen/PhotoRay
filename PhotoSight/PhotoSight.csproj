@@ -76,7 +76,6 @@
     <Compile Include="Converters\PictureCollectionToQuadsConverter.cs" />
     <Compile Include="Converters\PictureToBitmapConverter.cs" />
     <Compile Include="Converters\StringConverter.cs" />
-    <Compile Include="LoopingPicturesDataSource.cs" />
     <Compile Include="PhotoCameraLuminanceSource.cs" />
     <Compile Include="PhotoView.xaml.cs">
       <DependentUpon>PhotoView.xaml</DependentUpon>

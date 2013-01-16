@@ -63,12 +63,22 @@ namespace PhotoSight
         // This code will not execute when the application is first launched
         private void ApplicationActivated(object sender, ActivatedEventArgs e)
         {
+            if (PhoneApplicationService.Current.State.ContainsKey("Sid"))
+            {
+                Sid = PhoneApplicationService.Current.State["Sid"].ToString();
+            }
+            if (PhoneApplicationService.Current.State.ContainsKey("Picture"))
+            {
+                SelectedPicture = PhoneApplicationService.Current.State["Picture"] as Picture;
+            }
         }
 
         // Code to execute when the application is deactivated (sent to background)
         // This code will not execute when the application is closing
         private void ApplicationDeactivated(object sender, DeactivatedEventArgs e)
         {
+            PhoneApplicationService.Current.State.Add("Sid", Sid);
+            PhoneApplicationService.Current.State.Add("Picture", SelectedPicture);
         }
 
         // Code to execute when the application is closing (eg, user hit Back)

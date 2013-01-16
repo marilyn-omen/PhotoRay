@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Xna.Framework.Media;
@@ -8,19 +8,48 @@ namespace PhotoSight
 {
     public partial class PhotoView
     {
+        #region Fields
+
+        private List<Picture> _allPictures;
+        private readonly PostSubmitter _post;
+
+        #endregion
+
         #region Dependency properties
 
-        #region LoopingPicturesDataSource PicturesSource
+        #region ObservableCollection<Picture> Pictures
 
-        public LoopingPicturesDataSource PicturesSource
+        public ObservableCollection<Picture> Pictures
         {
-            get { return (LoopingPicturesDataSource)GetValue(PicturesSourceProperty); }
-            set { SetValue(PicturesSourceProperty, value); }
+            get { return (ObservableCollection<Picture>)GetValue(PicturesProperty); }
+            set { SetValue(PicturesProperty, value); }
         }
 
-        public static readonly DependencyProperty PicturesSourceProperty =
+        public static readonly DependencyProperty PicturesProperty =
             DependencyProperty.Register(
-                "PicturesSource", typeof(LoopingPicturesDataSource), typeof(PhotoView), new PropertyMetadata(null));
+                "Pictures", typeof(ObservableCollection<Picture>), typeof(PhotoView), new PropertyMetadata(null));
+
+        #endregion
+
+        #region Picture SelectedPicture
+
+        public Picture SelectedPicture
+        {
+            get { return (Picture)GetValue(SelectedPictureProperty); }
+            set { SetValue(SelectedPictureProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedPictureProperty =
+            DependencyProperty.Register(
+                "SelectedPicture",
+                typeof (Picture),
+                typeof (PhotoView),
+                new PropertyMetadata(null, SelectedPicturePropertyChanged));
+
+        private static void SelectedPicturePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((PhotoView) d).OnSelectedPictureChanged(e.NewValue as Picture);
+        }
 
         #endregion
 
@@ -42,33 +71,61 @@ namespace PhotoSight
         public PhotoView()
         {
             InitializeComponent();
+
+            _post = new PostSubmitter
+                {
+                    Url = "http://sltv.org.ua/upload.php"
+                };
+            _post.Completed += (sender, args) => { IsUploading = false; };
         }
 
         private void UploadPicture(Picture picture)
         {
             if (picture != null && !IsUploading)
             {
-                var worker = new BackgroundWorker();
-                worker.DoWork += (sender, args) =>
-                    {
-                        var post = new PostSubmitter
-                        {
-                            Url = "http://sltv.org.ua/upload.php",
-                            Parameters = new Dictionary<string, object>
-                            {
-                                {"sid", App.Sid},
-                                {"uploadedfile", Utils.StreamToByteArray(((Picture) args.Argument).GetImage())}
-                            }
-                        };
-                        post.Submit();
-                    };
-                worker.RunWorkerCompleted += (sender, args) =>
-                    {
-                        IsUploading = false;
-                    };
                 IsUploading = true;
-                worker.RunWorkerAsync(picture);
+                _post.Parameters = new Dictionary<string, object>
+                    {
+                        {"sid", App.Sid},
+                        {"uploadedfile", Utils.StreamToByteArray(picture.GetImage())}
+                    };
+                _post.Submit();
             }
+        }
+
+        private void OnSelectedPictureChanged(Picture newPicture)
+        {
+            if(newPicture != null)
+            {
+                UploadPicture(newPicture);
+                var picIdx = _allPictures.IndexOf(newPicture);
+                var pivotIdx = Pictures.IndexOf(newPicture);
+                var nextIdx = (pivotIdx + 1) % 3;
+                var prevIdx = ((pivotIdx - 1) < 0) ? 2 : (pivotIdx - 1);
+                Pictures[nextIdx] = _allPictures[LoopIncrement(picIdx)];
+                Pictures[prevIdx] = _allPictures[LoopDecrement(picIdx)];
+                
+            }
+        }
+
+        private int LoopIncrement(int n)
+        {
+            n++;
+            if(n >= _allPictures.Count)
+            {
+                n = 0;
+            }
+            return n;
+        }
+
+        private int LoopDecrement(int n)
+        {
+            n--;
+            if(n < 0)
+            {
+                n = _allPictures.Count - 1;
+            }
+            return n;
         }
 
         #region Overrides of Page
@@ -80,19 +137,19 @@ namespace PhotoSight
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            
+            _allPictures = new List<Picture>(App.SelectedPicture.Album.Pictures);
+            if(_allPictures.Count == 0)
+                return;
 
-            if (App.SelectedPicture != null && !string.IsNullOrWhiteSpace(App.Sid))
-            {
-                UploadPicture(App.SelectedPicture);
-                PicturesSource = new LoopingPicturesDataSource(new List<Picture>(App.SelectedPicture.Album.Pictures));
-                PicturesSource.SelectionChanged += (sender, args) =>
-                    {
-                        if (args.AddedItems.Count > 0)
-                        {
-                            UploadPicture(args.AddedItems[0] as Picture);
-                        }
-                    };
-            }
+            var selectedIdx = _allPictures.IndexOf(App.SelectedPicture);
+            Pictures = new ObservableCollection<Picture>
+                {
+                    _allPictures[LoopDecrement(selectedIdx)],
+                    _allPictures[selectedIdx],
+                    _allPictures[LoopIncrement(selectedIdx)]
+                };
+            SelectedPicture = App.SelectedPicture;
         }
 
         #endregion

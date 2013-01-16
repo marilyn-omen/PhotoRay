@@ -9,6 +9,7 @@ namespace PhotoSight
     {
         public string Url { get; set; }
         public Dictionary<string, object> Parameters { get; set; }
+        public event EventHandler Completed;
         private readonly string _boundary = "----------" + DateTime.Now.Ticks;
 
         public void Submit()
@@ -40,6 +41,8 @@ namespace PhotoSight
             streamRead.Close();
             // Release the HttpWebResponse
             response.Close();
+            
+            OnCompleted();
         }
 
 
@@ -89,6 +92,15 @@ namespace PhotoSight
                     writer.WriteLine();
                     writer.WriteLine(value.ToString());
                 }
+            }
+        }
+
+        private void OnCompleted()
+        {
+            var handler = Completed;
+            if(handler != null)
+            {
+                handler(this, null);
             }
         }
     }
