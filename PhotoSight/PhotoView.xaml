@@ -34,7 +34,7 @@
               Margin="12,0,12,0">
             <wpcontrols:Pivot ItemsSource="{Binding Path=Pictures, ElementName=_this}"
                               SelectedItem="{Binding Path=SelectedPicture, ElementName=_this, Mode=TwoWay}"
-                              IsEnabled="{Binding Path=IsUploading, ElementName=_this, Converter={StaticResource BooleanInvert}}">
+                              IsHitTestVisible="{Binding Path=IsUploading, ElementName=_this, Converter={StaticResource BooleanInvert}}">
                 <!--IsEnabled="{Binding Path=IsUploading, ElementName=_this, Converter={StaticResource BooleanInvert}}"-->
                 <wpcontrols:Pivot.Template>
                     <ControlTemplate TargetType="wpcontrols:Pivot">
@@ -63,7 +63,7 @@
                          Width="480"
                          IsIndeterminate="True"
                          HorizontalAlignment="Center"
-                         VerticalAlignment="Center" />
+                         VerticalAlignment="Top" />
         </Grid>
     </Grid>
 </phone:PhoneApplicationPage>

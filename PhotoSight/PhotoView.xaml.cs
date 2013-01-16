@@ -76,7 +76,7 @@ namespace PhotoSight
                 {
                     Url = "http://sltv.org.ua/upload.php"
                 };
-            _post.Completed += (sender, args) => { IsUploading = false; };
+            _post.Completed += (sender, args) => Dispatcher.BeginInvoke(() => { IsUploading = false; });
         }
 
         private void UploadPicture(Picture picture)
@@ -143,6 +143,7 @@ namespace PhotoSight
                 return;
 
             var selectedIdx = _allPictures.IndexOf(App.SelectedPicture);
+            selectedIdx = LoopDecrement(selectedIdx);
             Pictures = new ObservableCollection<Picture>
                 {
                     _allPictures[LoopDecrement(selectedIdx)],
