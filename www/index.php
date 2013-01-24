@@ -7,6 +7,7 @@ if(file_exists('photos/'.session_id().'.jpg')) {
 QRcode::png(session_id(), 'qr/'.session_id().'.png', 'L', 16, 1);
 ?>
 <html>
+<title>PhotoSight</title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
 <body style="background: black; color: white; font-family: segoe ui; text-align: center; padding: 0; margin: 0;">
 <div id="qr">
