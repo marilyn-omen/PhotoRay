@@ -35,7 +35,6 @@
             <wpcontrols:Pivot ItemsSource="{Binding Path=Pictures, ElementName=_this}"
                               SelectedItem="{Binding Path=SelectedPicture, ElementName=_this, Mode=TwoWay}"
                               IsHitTestVisible="{Binding Path=IsUploading, ElementName=_this, Converter={StaticResource BooleanInvert}}">
-                <!--IsEnabled="{Binding Path=IsUploading, ElementName=_this, Converter={StaticResource BooleanInvert}}"-->
                 <wpcontrols:Pivot.Template>
                     <ControlTemplate TargetType="wpcontrols:Pivot">
                         <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
@@ -47,14 +46,8 @@
                 </wpcontrols:Pivot.Template>
                 <wpcontrols:Pivot.ItemTemplate>
                     <DataTemplate>
-                        <wpcontrols:PivotItem Content="{Binding}">
-                            <wpcontrols:PivotItem.ContentTemplate>
-                                <DataTemplate>
-                                    <Image Source="{Binding ., Converter={StaticResource PictureToBitmap}}"
-                                           Tag="{Binding}" />
-                                </DataTemplate>
-                            </wpcontrols:PivotItem.ContentTemplate>
-                        </wpcontrols:PivotItem>
+                        <Image Source="{Binding ., Converter={StaticResource PictureToBitmap}}"
+                               Tag="{Binding}" />
                     </DataTemplate>
                 </wpcontrols:Pivot.ItemTemplate>
             </wpcontrols:Pivot>

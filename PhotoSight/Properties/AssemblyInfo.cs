@@ -8,9 +8,9 @@ using System.Resources;
 [assembly: AssemblyTitle("PhotoSight")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Petro Protsakh")]
 [assembly: AssemblyProduct("PhotoSight")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © Petro Protsakh 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

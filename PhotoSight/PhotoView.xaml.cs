@@ -74,7 +74,7 @@ namespace PhotoSight
 
             _post = new PostSubmitter
                 {
-                    Url = "http://sltv.org.ua/upload.php"
+                    Url = "http://photosight.azurewebsites.net/upload.php"
                 };
             _post.Completed += (sender, args) => Dispatcher.BeginInvoke(() => { IsUploading = false; });
         }

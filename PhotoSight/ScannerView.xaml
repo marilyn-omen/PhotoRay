@@ -35,11 +35,13 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel>
-                <TextBlock TextWrapping="Wrap">
-                    <Run Text="Open internet browser on your computer and navigate to the address" />
-                    <Underline>http://sltv.org.ua</Underline>
-                </TextBlock>
-                <TextBlock Text="Then scan the QR code from the page." />
+                <TextBlock Text="Open internet browser on your computer and navigate to the address"
+                           TextWrapping="Wrap"/>
+                <TextBlock Text="http://photosight.azurewebsites.net"
+                           TextWrapping="Wrap"
+                           TextDecorations="Underline" />
+                <TextBlock Text="Then scan the QR code from the page."
+                           TextWrapping="Wrap"/>
             </StackPanel>
             <Rectangle x:Name="ScanPreviewRect"
                        Grid.Row="1"
