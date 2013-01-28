@@ -5,7 +5,7 @@ $filename = 'photos/'.session_id().'.jpg';
 if(!file_exists($filename)) {
 	echo -1;
 } else {
-	echo filectime($filename);
+	echo filemtime($filename);
 }
 
 ?>

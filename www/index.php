@@ -8,8 +8,9 @@ QRcode::png(session_id(), 'qr/'.session_id().'.png', 'L', 16, 1);
 ?>
 <html>
 <title>PhotoSight</title>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
-<body style="background: black; color: white; font-family: segoe ui; text-align: center; padding: 0; margin: 0;">
+<script type="text/javascript" src="jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="jquery-ui-1.10.0.custom.min.js"></script>
+<body style="color: white; font-family: segoe ui; text-align: center; padding: 0; margin: 0; background: black url('loader.gif') no-repeat center center;">
 <div id="qr">
 	<h1>PHOTOSIGHT</h1>
 	<br /><br />
@@ -20,32 +21,51 @@ QRcode::png(session_id(), 'qr/'.session_id().'.png', 'L', 16, 1);
 </body>
 <script type="text/javascript">
 var prevDate = -1;
+var busy = false;
+function updatePhotoSrc() {
+	$("#photo").attr("src", "photos/<?php echo session_id() ?>.jpg?" + new Date().getTime());
+}
 function tryGetPhoto() {
+if(!busy) {
 $.ajax({ 
-		url: 'check.php',
+		url: 'check.php?' + new Date().getTime(),
 	    processData: false,
 	    success: function(result) {
 	    	if(result == -1) {
 	    		$("#photo").hide();
 	    		$("#qr").show();
 	    	} else if(result != prevDate) {
-				$("#photo").attr("src", "photos/<?php echo session_id() ?>.jpg?" + new Date().getTime());
-				$("#photo").show();
-				$("#qr").hide();
+	    		busy = true;
+	    		prevDate = result;
+	    		if($("#qr").is(":visible")) {
+	    			$("#qr").hide();
+	    		}
+	    		if($("#photo").is(":visible")) {
+		    		$("#photo").hide("fade", 500, function() {
+		    			updatePhotoSrc();
+		    		});
+	    		} else {
+	    			updatePhotoSrc();
+	    		}
 			}
 	    }
 	});
+}
 window.setTimeout(function() {
 	tryGetPhoto();
 }, 500);
-};
+}
 $("#qrimg").load(function() {
 	$.ajax({ 
 			url: 'delete.php',
 		    processData: false
 		});
-	}
-);
+});
+$("#photo").load(function() {
+	$("#photo").show("fade", 500, function() {
+		busy = false;
+	});
+});
 $("#photo").hide();
 window.setTimeout(function() {
 	tryGetPhoto();
