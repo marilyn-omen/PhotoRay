@@ -13,7 +13,7 @@ namespace PhotoSight
     {
         #region Fields
 
-        private readonly DispatcherTimer _timer;
+        private DispatcherTimer _timer;
         private PhotoCameraLuminanceSource _luminance;
         private QRCodeReader _reader;
         private PhotoCamera _photoCamera;
@@ -22,18 +22,18 @@ namespace PhotoSight
 
         #region Dependency properties
 
-        #region bool IsCodeScanned
+        #region bool IsInitializing
 
-        public bool IsCodeScanned
+        public bool IsInitializing
         {
-            get { return (bool)GetValue(IsCodeScannedProperty); }
-            set { SetValue(IsCodeScannedProperty, value); }
+            get { return (bool)GetValue(IsInitializingProperty); }
+            set { SetValue(IsInitializingProperty, value); }
         }
 
-        public static readonly DependencyProperty IsCodeScannedProperty =
-            DependencyProperty.Register("IsCodeScanned", typeof (bool), typeof (ScannerView),
-                                        new PropertyMetadata(false));
-        
+        public static readonly DependencyProperty IsInitializingProperty =
+            DependencyProperty.Register(
+                "IsInitializing", typeof(bool), typeof(ScannerView), new PropertyMetadata(false));
+
         #endregion
 
         #endregion
@@ -41,27 +41,16 @@ namespace PhotoSight
         public ScannerView()
         {
             InitializeComponent();
-
-            _timer = new DispatcherTimer
-                         {
-                             Interval = TimeSpan.FromMilliseconds(250)
-                         };
-            _timer.Tick += (o, arg) => ScanPreviewBuffer();
-            CameraButtons.ShutterKeyHalfPressed += (o, arg) => _photoCamera.Focus();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private void OnShutterKeyHalfPressed(object o, EventArgs arg)
         {
-            base.OnNavigatedTo(e);
+            _photoCamera.Focus();
+        }
 
-            /*App.Sid = "test";
-            NavigationService.Navigate(new Uri("/AlbumView.xaml", UriKind.RelativeOrAbsolute));
-            return;*/
-
-            App.Sid = null;
-            _photoCamera = new PhotoCamera();
-            _photoCamera.Initialized += OnPhotoCameraInitialized;
-            ScannerPreviewVideo.SetSource(_photoCamera);
+        private void OnTimerTick(object o, EventArgs arg)
+        {
+            ScanPreviewBuffer();
         }
 
         private void OnPhotoCameraInitialized(object sender, CameraOperationCompletedEventArgs e)
@@ -76,6 +65,7 @@ namespace PhotoSight
             {
                 ScannerPreviewTransform.Rotation = _photoCamera.Orientation;
                 _timer.Start();
+                IsInitializing = false;
             });
         }
 
@@ -98,12 +88,56 @@ namespace PhotoSight
         {
             if (!string.IsNullOrWhiteSpace(sid))
             {
-                _timer.Stop();
-                _photoCamera.Initialized -= OnPhotoCameraInitialized;
-                _photoCamera = null;
                 App.Sid = sid;
                 NavigationService.Navigate(new Uri("/AlbumView.xaml", UriKind.RelativeOrAbsolute));
             }
         }
+
+        #region Overrides of Page
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+#if DEBUG
+            App.Sid = "test";
+            NavigationService.Navigate(new Uri("/AlbumView.xaml", UriKind.RelativeOrAbsolute));
+            return;
+#endif
+
+            IsInitializing = true;
+            App.Sid = null;
+            CameraButtons.ShutterKeyHalfPressed += OnShutterKeyHalfPressed;
+
+            _timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(250)
+            };
+            _timer.Tick += OnTimerTick;
+
+            _photoCamera = new PhotoCamera();
+            _photoCamera.Initialized += OnPhotoCameraInitialized;
+            ScannerPreviewVideo.SetSource(_photoCamera);
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            CameraButtons.ShutterKeyHalfPressed -= OnShutterKeyHalfPressed;
+
+            _timer.Stop();
+            _timer.Tick -= OnTimerTick;
+            _timer = null;
+            
+            _photoCamera.Initialized -= OnPhotoCameraInitialized;
+            _photoCamera.Dispose();
+            _photoCamera = null;
+
+            _luminance = null;
+            _reader = null;
+
+            base.OnNavigatingFrom(e);
+        }
+
+        #endregion
     }
 }

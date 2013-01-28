@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Navigation;
@@ -71,13 +72,28 @@ namespace PhotoSight
         public PhotoView()
         {
             InitializeComponent();
-
             _post = new PostSubmitter
                 {
                     Url = "http://photosight.azurewebsites.net/upload.php"
                 };
             _post.Completed += (sender, args) => Dispatcher.BeginInvoke(() => { IsUploading = false; });
         }
+
+        private void OnSelectedPictureChanged(Picture newPicture)
+        {
+            if(newPicture != null)
+            {
+                UploadPicture(newPicture);
+                var picIdx = _allPictures.IndexOf(newPicture);
+                var pivotIdx = Pictures.IndexOf(newPicture);
+                var nextIdx = (pivotIdx + 1) % 3;
+                var prevIdx = ((pivotIdx - 1) < 0) ? 2 : (pivotIdx - 1);
+                Pictures[nextIdx] = _allPictures[LoopIncrement(picIdx)];
+                Pictures[prevIdx] = _allPictures[LoopDecrement(picIdx)];
+            }
+        }
+
+        #region Helper methods
 
         private void UploadPicture(Picture picture)
         {
@@ -93,25 +109,10 @@ namespace PhotoSight
             }
         }
 
-        private void OnSelectedPictureChanged(Picture newPicture)
-        {
-            if(newPicture != null)
-            {
-                UploadPicture(newPicture);
-                var picIdx = _allPictures.IndexOf(newPicture);
-                var pivotIdx = Pictures.IndexOf(newPicture);
-                var nextIdx = (pivotIdx + 1) % 3;
-                var prevIdx = ((pivotIdx - 1) < 0) ? 2 : (pivotIdx - 1);
-                Pictures[nextIdx] = _allPictures[LoopIncrement(picIdx)];
-                Pictures[prevIdx] = _allPictures[LoopDecrement(picIdx)];
-                
-            }
-        }
-
         private int LoopIncrement(int n)
         {
             n++;
-            if(n >= _allPictures.Count)
+            if (n >= _allPictures.Count)
             {
                 n = 0;
             }
@@ -121,12 +122,14 @@ namespace PhotoSight
         private int LoopDecrement(int n)
         {
             n--;
-            if(n < 0)
+            if (n < 0)
             {
                 n = _allPictures.Count - 1;
             }
             return n;
         }
+
+        #endregion
 
         #region Overrides of Page
 
@@ -137,9 +140,18 @@ namespace PhotoSight
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            
+
+            if (App.SelectedPicture == null)
+            {
+                throw new InvalidOperationException("Selected picture was not set before navigating to Photo view");
+            }
+            if (string.IsNullOrWhiteSpace(App.Sid))
+            {
+                throw new InvalidOperationException("Client SID was not set before navigating to Photo view");
+            }
+
             _allPictures = new List<Picture>(App.SelectedPicture.Album.Pictures);
-            if(_allPictures.Count == 0)
+            if (_allPictures.Count == 0)
                 return;
 
             var selectedIdx = _allPictures.IndexOf(App.SelectedPicture);

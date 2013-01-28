@@ -9,6 +9,7 @@ namespace PhotoSight
     public partial class App
     {
         public static string Sid { get; set; }
+        public static PictureAlbum SelectedAlbum { get; set; }
         public static Picture SelectedPicture { get; set; }
 
         /// <summary>

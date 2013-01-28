@@ -11,6 +11,12 @@ namespace PhotoSight
 {
     public partial class AlbumView
     {
+        #region Fields
+
+        private bool _isNewPageInstance;
+
+        #endregion
+
         #region Dependency properties
 
         #region List<PictureAlbum> Albums
@@ -27,20 +33,43 @@ namespace PhotoSight
 
         #endregion
 
+        #region PictureAlbum SelectedAlbum
+
+        public PictureAlbum SelectedAlbum
+        {
+            get { return (PictureAlbum) GetValue(SelectedAlbumProperty); }
+            set { SetValue(SelectedAlbumProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectedAlbumProperty =
+            DependencyProperty.Register(
+                "SelectedAlbum", typeof (PictureAlbum), typeof (AlbumView), new PropertyMetadata(null));
+
+        #endregion
+
         #endregion
 
         public AlbumView()
         {
             InitializeComponent();
+            _isNewPageInstance = true;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            App.SelectedPicture = null;
-            var lib = new MediaLibrary();
-            Albums = lib.RootPictureAlbum.Albums.Where(album => album.Pictures.Count != 0).ToList();
+            if(_isNewPageInstance)
+            {
+                _isNewPageInstance = false;
+                var lib = new MediaLibrary();
+                Albums = lib.RootPictureAlbum.Albums.Where(album => album.Pictures.Count != 0).ToList();
+                if(App.SelectedAlbum != null)
+                {
+                    // resuming app
+                    SelectedAlbum = App.SelectedAlbum;
+                }
+            }
         }
 
         private void OnPhotoTap(object sender, GestureEventArgs e)
@@ -52,6 +81,7 @@ namespace PhotoSight
             if (picture == null)
                 return;
 
+            App.SelectedAlbum = picture.Album;
             App.SelectedPicture = picture;
             NavigationService.Navigate(new Uri("/PhotoView.xaml", UriKind.RelativeOrAbsolute));
         }

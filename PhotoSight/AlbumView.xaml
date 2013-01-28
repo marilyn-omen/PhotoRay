@@ -32,7 +32,8 @@
         <Grid x:Name="ContentPanel"
               Grid.Row="1"
               Margin="12,0,12,0">
-            <wpcontrols:Pivot ItemsSource="{Binding Path=Albums, ElementName=_this}">
+            <wpcontrols:Pivot ItemsSource="{Binding Path=Albums, ElementName=_this}"
+                              SelectedItem="{Binding Path=SelectedAlbum, ElementName=_this, Mode=TwoWay}">
                 <wpcontrols:Pivot.ItemTemplate>
                     <DataTemplate>
                         <wpcontrols:PivotItem Header="{Binding Name}"
