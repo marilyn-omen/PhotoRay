@@ -7,12 +7,12 @@ if(file_exists('photos/'.session_id().'.jpg')) {
 QRcode::png(session_id(), 'qr/'.session_id().'.png', 'L', 16, 1);
 ?>
 <html>
-<title>PhotoSight</title>
+<title>PhotoRay</title>
 <script type="text/javascript" src="jquery-1.9.0.min.js"></script>
 <script type="text/javascript" src="jquery-ui-1.10.0.custom.min.js"></script>
 <body style="color: white; font-family: segoe ui; text-align: center; padding: 0; margin: 0; background: black url('loader.gif') no-repeat center center;">
 <div id="qr">
-	<h1>PHOTOSIGHT</h1>
+	<h1>PHOTORAY</h1>
 	<br /><br />
 	<img id="qrimg" src="qr/<?php echo session_id() ?>.png" />
 	<br />

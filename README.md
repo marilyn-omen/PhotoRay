@@ -1,2 +1,2 @@
-PhotoSight
-==========
+PhotoRay
+========

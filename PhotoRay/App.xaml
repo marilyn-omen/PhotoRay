@@ -1,0 +1,33 @@
+﻿<Application x:Class="PhotoRay.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:PhotoRay.Converters">
+    <Application.Resources>
+        <ResourceDictionary>
+            <system:String x:Key="AppName">PhotoRay</system:String>
+            <converters:StringConverter x:Key="ToUpper"
+                                        Transform="ToUpper" />
+            <converters:StringConverter x:Key="ToLower"
+                                        Transform="ToLower" />
+            <converters:PictureToBitmapConverter x:Key="PictureToBitmap" />
+            <converters:PictureToBitmapConverter x:Key="PictureToThumbnail"
+                                                Thumbnail="True" />
+            <converters:PictureCollectionToQuadsConverter x:Key="PicturesToQuads" />
+            <converters:BooleanToVisibilityConverter x:Key="VisibleIfTrue" />
+            <converters:BooleanToVisibilityConverter x:Key="VisibleIfFalse"
+                                                     Invert="True" />
+            <converters:BooleanInverterConverter x:Key="BooleanInvert" />
+            <converters:BooleanToDoubleConverter x:Key="BoolToOpacity"
+                                                 TrueValue="0.5"
+                                                 FalseValue="1" />
+        </ResourceDictionary>
+    </Application.Resources>
+    <Application.ApplicationLifetimeObjects>
+        <shell:PhoneApplicationService Launching="ApplicationLaunching"
+                                       Closing="ApplicationClosing"
+                                       Activated="ApplicationActivated"
+                                       Deactivated="ApplicationDeactivated" />
+    </Application.ApplicationLifetimeObjects>
+</Application>
