@@ -78,7 +78,7 @@ namespace PhotoRay
             InitializeComponent();
             _post = new PostSubmitter
                 {
-                    Url = "http://photoray.sltv.org.ua/upload.php"
+                    Url = "http://photoray.org/upload.php"
                 };
             _post.Completed += (sender, args) => Dispatcher.BeginInvoke(() => { IsUploading = false; });
         }

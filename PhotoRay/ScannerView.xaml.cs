@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.IsolatedStorage;
 using System.Windows;
 using System.Windows.Navigation;
 using System.Windows.Threading;
@@ -42,6 +43,27 @@ namespace PhotoRay
         public ScannerView()
         {
             InitializeComponent();
+        }
+
+        private void StartInitialization()
+        {
+            IsInitializing = true;
+            CameraButtons.ShutterKeyHalfPressed += OnShutterKeyHalfPressed;
+
+            _timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(250)
+            };
+            _timer.Tick += OnTimerTick;
+
+            _photoCamera = new PhotoCamera();
+            _photoCamera.Initialized += OnPhotoCameraInitialized;
+            ScannerPreviewVideo.SetSource(_photoCamera);
+        }
+
+        private void ShowFirstRunNotice()
+        {
+            MessageBox.Show(AppResources.NoticeText, AppResources.NoticeTitle, MessageBoxButton.OK);
         }
 
         private void OnShutterKeyHalfPressed(object o, EventArgs arg)
@@ -100,27 +122,31 @@ namespace PhotoRay
         {
             base.OnNavigatedTo(e);
 
-            /*App.Sid = "test";
-            NavigationService.Navigate(new Uri("/AlbumView.xaml", UriKind.RelativeOrAbsolute));
-            return;*/
-
-            IsInitializing = true;
-            App.Sid = null;
-            CameraButtons.ShutterKeyHalfPressed += OnShutterKeyHalfPressed;
-
-            _timer = new DispatcherTimer
+            if (System.Diagnostics.Debugger.IsAttached)
             {
-                Interval = TimeSpan.FromMilliseconds(250)
-            };
-            _timer.Tick += OnTimerTick;
+                App.Sid = "debug";
+                NavigationService.Navigate(new Uri("/AlbumView.xaml", UriKind.RelativeOrAbsolute));
+                return;
+            }
 
-            _photoCamera = new PhotoCamera();
-            _photoCamera.Initialized += OnPhotoCameraInitialized;
-            ScannerPreviewVideo.SetSource(_photoCamera);
+            App.Sid = null;
+
+            if ((bool) IsolatedStorageSettings.ApplicationSettings["FirstRun"])
+            {
+                IsolatedStorageSettings.ApplicationSettings["FirstRun"] = false;
+                ShowFirstRunNotice();
+            }
+            StartInitialization();
         }
+
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                return;
+            }
+
             CameraButtons.ShutterKeyHalfPressed -= OnShutterKeyHalfPressed;
 
             _timer.Stop();

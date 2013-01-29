@@ -57,6 +57,19 @@ namespace PhotoRay
             _isNewPageInstance = true;
         }
 
+        private void OnPhotoTap(object sender, GestureEventArgs e)
+        {
+            var image = sender as Image;
+            if (image == null)
+                return;
+            var picture = image.Tag as Picture;
+            if (picture == null)
+                return;
+
+            App.SelectedPictureId = new PictureId(picture.Name, picture.Date);
+            NavigationService.Navigate(new Uri("/PhotoView.xaml", UriKind.RelativeOrAbsolute));
+        }
+
         #region Overrides of Page
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -82,19 +95,6 @@ namespace PhotoRay
         }
 
         #endregion
-
-        private void OnPhotoTap(object sender, GestureEventArgs e)
-        {
-            var image = sender as Image;
-            if (image == null)
-                return;
-            var picture = image.Tag as Picture;
-            if (picture == null)
-                return;
-
-            App.SelectedPictureId = new PictureId(picture.Name, picture.Date);
-            NavigationService.Navigate(new Uri("/PhotoView.xaml", UriKind.RelativeOrAbsolute));
-        }
 
         #region Dispose
 

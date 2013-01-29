@@ -3,7 +3,6 @@
                             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                             xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
-                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             mc:Ignorable="d"
@@ -13,8 +12,7 @@
                             FontSize="{StaticResource PhoneFontSizeNormal}"
                             Foreground="{StaticResource PhoneForegroundBrush}"
                             SupportedOrientations="Portrait"
-                            Orientation="Portrait"
-                            shell:SystemTray.IsVisible="True">
+                            Orientation="Portrait">
     <Grid x:Name="LayoutRoot"
           Background="Transparent">
         <Grid.RowDefinitions>
@@ -25,7 +23,7 @@
                     Grid.Row="0"
                     Margin="12,17,0,28">
             <TextBlock x:Name="ApplicationTitle"
-                       Text="{Binding Source={StaticResource AppName}, Converter={StaticResource ToUpper}}"
+                       Text="{Binding Path=LocalizedResources.AppName, Source={StaticResource LocalizedStrings}, Converter={StaticResource ToUpper}}"
                        Style="{StaticResource PhoneTextNormalStyle}" />
         </StackPanel>
         <Grid x:Name="ContentPanel"
@@ -36,12 +34,12 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel>
-                <TextBlock Text="Open internet browser on your computer and navigate to the address"
+                <TextBlock Text="{Binding Path=LocalizedResources.InstructionLine1, Source={StaticResource LocalizedStrings}}"
                            TextWrapping="Wrap"/>
-                <TextBlock Text="http://photoray.sltv.org.ua"
+                <TextBlock Text="{Binding Path=LocalizedResources.AppRemoteUrl, Source={StaticResource LocalizedStrings}}"
                            TextWrapping="Wrap"
                            TextDecorations="Underline" />
-                <TextBlock Text="Then scan the QR code from the page."
+                <TextBlock Text="{Binding Path=LocalizedResources.InstructionLine2, Source={StaticResource LocalizedStrings}}"
                            TextWrapping="Wrap"/>
             </StackPanel>
             <Rectangle x:Name="ScanPreviewRect"
@@ -65,7 +63,7 @@
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Text="Initializing camera"
+                <TextBlock Text="{Binding Path=LocalizedResources.InitializingCamera, Source={StaticResource LocalizedStrings}}"
                            Style="{StaticResource PhoneTextSmallStyle}"
                            VerticalAlignment="Bottom"
                            HorizontalAlignment="Center" />

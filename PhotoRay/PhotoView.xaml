@@ -26,7 +26,7 @@
                     Grid.Row="0"
                     Margin="12,17,0,28">
             <TextBlock x:Name="ApplicationTitle"
-                       Text="{Binding Source={StaticResource AppName}, Converter={StaticResource ToUpper}}"
+                       Text="{Binding Path=LocalizedResources.AppName, Source={StaticResource LocalizedStrings}, Converter={StaticResource ToUpper}}"
                        Style="{StaticResource PhoneTextNormalStyle}" />
         </StackPanel>
         <Grid x:Name="ContentPanel"

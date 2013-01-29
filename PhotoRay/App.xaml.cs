@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.IO.IsolatedStorage;
+using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
@@ -57,6 +58,14 @@ namespace PhotoRay
         // This code will not execute when the application is reactivated
         private void ApplicationLaunching(object sender, LaunchingEventArgs e)
         {
+             if(!IsolatedStorageSettings.ApplicationSettings.Contains("FirstRun"))
+             {
+                 IsolatedStorageSettings.ApplicationSettings.Add("FirstRun", true);
+             }
+             else
+             {
+                 IsolatedStorageSettings.ApplicationSettings["FirstRun"] = false;
+             }
         }
 
         // Code to execute when the application is activated (brought to foreground)
