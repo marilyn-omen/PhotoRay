@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CrashMessageText" xml:space="preserve">
+    <value>Приносимо свої вибачення, схоже, попередній запуск програми завершився невдало. Чи бажаєте надіслати розробнику інформацію про цю проблему, щоб допомогти йому її виправити і зробити PhotoRay кращим?</value>
+  </data>
+  <data name="CrashMessageTitle" xml:space="preserve">
+    <value>Що трапилось?</value>
+  </data>
+  <data name="CrashReportEmailSubject" xml:space="preserve">
+    <value>PhotoRay звіт про падіння</value>
+  </data>
   <data name="InitializingCamera" xml:space="preserve">
     <value>Ініціалізація камери</value>
   </data>
@@ -124,6 +133,12 @@
     <value>Відкрийте інтернет браузер на комп'ютері і перейдіть за адресою</value>
   </data>
   <data name="InstructionLine2" xml:space="preserve">
-    <value>Після чого зчитайте QR код зі сторінки.</value>
+    <value>Після чого зчитайте QR код зі сторінки за допомогою камери телефону.</value>
+  </data>
+  <data name="NoticeText" xml:space="preserve">
+    <value>PhotoRay зчитує фото галерею вашого телефону і завантажує фотографії на віддалений сервер по мірі їх вибору. Завантажені фотографії не використовуються жодним чином, крім відображення їх вам на веб-сторінці, і видаляються відразу ж після цього. PhotoRay використовує підключення для передачі даних телефону для відправки фотографій, за що може стягуватись плата вашим оператором. Для приємної та швидкої роботи найкраще використовувати програму при Wi-Fi з'єднанні.</value>
+  </data>
+  <data name="NoticeTitle" xml:space="preserve">
+    <value>Попередження</value>
   </data>
 </root>

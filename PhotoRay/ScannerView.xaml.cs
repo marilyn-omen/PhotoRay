@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO.IsolatedStorage;
+using System.Threading;
 using System.Windows;
 using System.Windows.Navigation;
 using System.Windows.Threading;
 using Microsoft.Devices;
+using Microsoft.Phone.Tasks;
 using com.google.zxing;
 using com.google.zxing.common;
 using com.google.zxing.qrcode;
@@ -63,7 +65,37 @@ namespace PhotoRay
 
         private void ShowFirstRunNotice()
         {
-            MessageBox.Show(AppResources.NoticeText, AppResources.NoticeTitle, MessageBoxButton.OK);
+            if ((bool) IsolatedStorageSettings.ApplicationSettings["FirstRun"])
+            {
+                IsolatedStorageSettings.ApplicationSettings["FirstRun"] = false;
+                IsInitializing = false;
+                MessageBox.Show(AppResources.NoticeText, AppResources.NoticeTitle, MessageBoxButton.OK);
+                IsInitializing = true;
+            }
+        }
+
+        private void CheckForCrashReport()
+        {
+            if (IsolatedStorageSettings.ApplicationSettings.Contains("CrashReport"))
+            {
+                var report = IsolatedStorageSettings.ApplicationSettings["CrashReport"].ToString();
+                if (!string.IsNullOrWhiteSpace(report))
+                {
+                    IsInitializing = false;
+                    if (MessageBox.Show(AppResources.CrashMessageText, AppResources.CrashMessageTitle, MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    {
+                        var emailTask = new EmailComposeTask
+                        {
+                            To = AppResources.SupportEmail,
+                            Subject = AppResources.CrashReportEmailSubject,
+                            Body = report
+                        };
+                        emailTask.Show();
+                    }
+                    IsInitializing = true;
+                }
+                IsolatedStorageSettings.ApplicationSettings.Remove("CrashReport");
+            }
         }
 
         private void OnShutterKeyHalfPressed(object o, EventArgs arg)
@@ -121,8 +153,8 @@ namespace PhotoRay
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
-            if (System.Diagnostics.Debugger.IsAttached)
+            
+            if (Microsoft.Devices.Environment.DeviceType == DeviceType.Emulator)
             {
                 App.Sid = "debug";
                 NavigationService.Navigate(new Uri("/AlbumView.xaml", UriKind.RelativeOrAbsolute));
@@ -131,18 +163,18 @@ namespace PhotoRay
 
             App.Sid = null;
 
-            if ((bool) IsolatedStorageSettings.ApplicationSettings["FirstRun"])
-            {
-                IsolatedStorageSettings.ApplicationSettings["FirstRun"] = false;
-                ShowFirstRunNotice();
-            }
-            StartInitialization();
+            ThreadPool.QueueUserWorkItem(stateInfo => Dispatcher.BeginInvoke(() =>
+                {
+                    ShowFirstRunNotice();
+                    CheckForCrashReport();
+                    StartInitialization();
+                }));
         }
 
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            if (System.Diagnostics.Debugger.IsAttached)
+            if (Microsoft.Devices.Environment.DeviceType == DeviceType.Emulator)
             {
                 return;
             }

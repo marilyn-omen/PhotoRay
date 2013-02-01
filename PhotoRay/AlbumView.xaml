@@ -12,7 +12,7 @@
                             SupportedOrientations="Portrait"
                             Orientation="Portrait"
                             mc:Ignorable="d"
-                            d:DesignHeight="768"
+                            d:DesignHeight="800"
                             d:DesignWidth="480">
     <Grid x:Name="LayoutRoot"
           Background="Transparent">
@@ -34,34 +34,27 @@
                               SelectedItem="{Binding Path=SelectedAlbum, ElementName=_this, Mode=TwoWay}">
                 <wpcontrols:Pivot.ItemTemplate>
                     <DataTemplate>
-                        <wpcontrols:PivotItem Header="{Binding Name}"
-                                              Content="{Binding Pictures, Converter={StaticResource PicturesToQuads}}">
-                            <wpcontrols:PivotItem.ContentTemplate>
+                        <ListBox ItemsSource="{Binding Pictures, Converter={StaticResource PicturesToQuads}}">
+                            <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <ListBox ItemsSource="{Binding}">
-                                        <ListBox.ItemTemplate>
+                                    <ItemsControl ItemsSource="{Binding}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <ItemsControl ItemsSource="{Binding}">
-                                                    <ItemsControl.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <VirtualizingStackPanel Orientation="Horizontal" />
-                                                        </ItemsPanelTemplate>
-                                                    </ItemsControl.ItemsPanel>
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Image Source="{Binding ., Converter={StaticResource PictureToThumbnail}}"
-                                                                   Tag="{Binding}"
-                                                                   Margin="2"
-                                                                   Tap="OnPhotoTap" />
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
+                                                <Image Source="{Binding ., Converter={StaticResource PictureToThumbnail}}"
+                                                       Tag="{Binding}"
+                                                       Margin="2"
+                                                       Tap="OnPhotoTap" />
                                             </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </DataTemplate>
-                            </wpcontrols:PivotItem.ContentTemplate>
-                        </wpcontrols:PivotItem>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </DataTemplate>
                 </wpcontrols:Pivot.ItemTemplate>
             </wpcontrols:Pivot>

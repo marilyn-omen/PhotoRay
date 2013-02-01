@@ -123,6 +123,15 @@
   <data name="AppRemoteUrl" xml:space="preserve">
     <value>http://photoray.org</value>
   </data>
+  <data name="CrashMessageText" xml:space="preserve">
+    <value>We apologize, but it looks like previous application run ended up with an exception. Would you like to send the developer gathered information about this issue to help him fix it and make PhotoRay better?</value>
+  </data>
+  <data name="CrashMessageTitle" xml:space="preserve">
+    <value>What happened?</value>
+  </data>
+  <data name="CrashReportEmailSubject" xml:space="preserve">
+    <value>PhotoRay crash report</value>
+  </data>
   <data name="InitializingCamera" xml:space="preserve">
     <value>Initializing camera</value>
   </data>
@@ -130,12 +139,15 @@
     <value>Open internet browser on your computer and navigate to the address</value>
   </data>
   <data name="InstructionLine2" xml:space="preserve">
-    <value>Then scan the QR code from the page.</value>
+    <value>Scan provided QR code with phone camera to begin.</value>
   </data>
   <data name="NoticeText" xml:space="preserve">
-    <value>PhotoRay uses your data connection to transfer photos, standard fees may apply. For smooth and fast operation it is best to use the application with WiFi/cable connected.</value>
+    <value>PhotoRay accesses your phone photo gallery and uploads photos to remote server as they are selected. Uploaded photos are not used in any way other then displaying them to you at the web page and are deleted immediately after that. PhotoRay uses your data connection to transfer photos, so standard fees may apply. For smooth and fast operation it is best to use the application with Wi-Fi connected.</value>
   </data>
   <data name="NoticeTitle" xml:space="preserve">
-    <value>Notice</value>
+    <value>Disclaimer</value>
+  </data>
+  <data name="SupportEmail" xml:space="preserve">
+    <value>support@photoray.org</value>
   </data>
 </root>

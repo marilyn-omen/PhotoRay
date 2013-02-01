@@ -1,4 +1,6 @@
-﻿using System.IO.IsolatedStorage;
+﻿using System;
+using System.Globalization;
+using System.IO.IsolatedStorage;
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
@@ -54,18 +56,32 @@ namespace PhotoRay
 
         }
 
+        private void SaveExceptionInfo(Exception e)
+        {
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains("CrashReport"))
+            {
+                IsolatedStorageSettings.ApplicationSettings.Add("CrashReport", e.ToString());
+            }
+            else
+            {
+                IsolatedStorageSettings.ApplicationSettings["CrashReport"] = e.ToString();
+            }
+        }
+
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
         private void ApplicationLaunching(object sender, LaunchingEventArgs e)
         {
-             if(!IsolatedStorageSettings.ApplicationSettings.Contains("FirstRun"))
-             {
-                 IsolatedStorageSettings.ApplicationSettings.Add("FirstRun", true);
-             }
-             else
-             {
-                 IsolatedStorageSettings.ApplicationSettings["FirstRun"] = false;
-             }
+            AppResources.Culture = CultureInfo.CurrentCulture;
+
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains("FirstRun"))
+            {
+                IsolatedStorageSettings.ApplicationSettings.Add("FirstRun", true);
+            }
+            else
+            {
+                IsolatedStorageSettings.ApplicationSettings["FirstRun"] = false;
+            }
         }
 
         // Code to execute when the application is activated (brought to foreground)
@@ -134,6 +150,8 @@ namespace PhotoRay
         // Code to execute if a navigation fails
         private void OnRootFrameNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
+            SaveExceptionInfo(e.Exception);
+
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 // A navigation has failed; break into the debugger
@@ -144,6 +162,8 @@ namespace PhotoRay
         // Code to execute on Unhandled Exceptions
         private void OnApplicationUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            SaveExceptionInfo(e.ExceptionObject);
+
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger
