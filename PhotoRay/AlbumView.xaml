@@ -6,13 +6,15 @@
                             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                             xmlns:wpcontrols="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+                            xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
                             FontFamily="{StaticResource PhoneFontFamilyNormal}"
                             FontSize="{StaticResource PhoneFontSizeNormal}"
                             Foreground="{StaticResource PhoneForegroundBrush}"
                             SupportedOrientations="Portrait"
                             Orientation="Portrait"
+                            shell:SystemTray.IsVisible="True"
                             mc:Ignorable="d"
-                            d:DesignHeight="800"
+                            d:DesignHeight="696"
                             d:DesignWidth="480">
     <Grid x:Name="LayoutRoot"
           Background="Transparent">

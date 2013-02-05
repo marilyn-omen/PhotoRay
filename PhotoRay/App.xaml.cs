@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO.IsolatedStorage;
+using System.Threading;
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
@@ -68,11 +69,20 @@ namespace PhotoRay
             }
         }
 
+        public static ApplicationBar BuildLocalizedApplicationBar(EventHandler aboutClickHandler)
+        {
+            var appBar = new ApplicationBar { Mode = ApplicationBarMode.Minimized };
+            var aboutItem = new ApplicationBarMenuItem(AppResources.AboutMenuText);
+            aboutItem.Click += aboutClickHandler;
+            appBar.MenuItems.Add(aboutItem);
+            return appBar;
+        }
+
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
         private void ApplicationLaunching(object sender, LaunchingEventArgs e)
         {
-            AppResources.Culture = CultureInfo.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CurrentCulture;
 
             if (!IsolatedStorageSettings.ApplicationSettings.Contains("FirstRun"))
             {

@@ -55,6 +55,9 @@ namespace PhotoRay
         {
             InitializeComponent();
             _isNewPageInstance = true;
+            ApplicationBar =
+                App.BuildLocalizedApplicationBar(
+                    (sender, args) => NavigationService.Navigate(new Uri("/AboutView.xaml", UriKind.RelativeOrAbsolute)));
         }
 
         private void OnPhotoTap(object sender, GestureEventArgs e)

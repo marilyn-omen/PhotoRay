@@ -45,6 +45,9 @@ namespace PhotoRay
         public ScannerView()
         {
             InitializeComponent();
+            ApplicationBar =
+                App.BuildLocalizedApplicationBar(
+                    (sender, args) => NavigationService.Navigate(new Uri("/AboutView.xaml", UriKind.RelativeOrAbsolute)));
         }
 
         private void StartInitialization()

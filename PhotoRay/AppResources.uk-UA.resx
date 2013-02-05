@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutPageTitle" xml:space="preserve">
+    <value>Про програму</value>
+  </data>
   <data name="CrashMessageText" xml:space="preserve">
     <value>Приносимо свої вибачення, схоже, попередній запуск програми завершився невдало. Чи бажаєте надіслати розробнику інформацію про цю проблему, щоб допомогти йому її виправити і зробити PhotoRay кращим?</value>
   </data>
@@ -140,5 +143,11 @@
   </data>
   <data name="NoticeTitle" xml:space="preserve">
     <value>Попередження</value>
+  </data>
+  <data name="UploadErrorText" xml:space="preserve">
+    <value>Не вдалось відправити фото. Можливо, розірвано з'єднання для передачі даних або Wi-Fi. Будь-ласка, перевірте налаштування вашого телефону.</value>
+  </data>
+  <data name="UploadErrorTitle" xml:space="preserve">
+    <value>Помилка</value>
   </data>
 </root>

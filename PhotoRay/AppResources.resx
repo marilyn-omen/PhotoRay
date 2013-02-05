@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutMenuText" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AboutPageTitle" xml:space="preserve">
+    <value>About</value>
+  </data>
   <data name="AppName" xml:space="preserve">
     <value>PhotoRay</value>
   </data>
@@ -149,5 +155,11 @@
   </data>
   <data name="SupportEmail" xml:space="preserve">
     <value>support@photoray.org</value>
+  </data>
+  <data name="UploadErrorText" xml:space="preserve">
+    <value>Unable to upload photo. You might have lost your cellular data or Wi-Fi connection. Please check your phone settings.</value>
+  </data>
+  <data name="UploadErrorTitle" xml:space="preserve">
+    <value>Error</value>
   </data>
 </root>

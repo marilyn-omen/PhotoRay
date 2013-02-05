@@ -5,11 +5,21 @@ using System.Net;
 
 namespace PhotoRay
 {
+    public class PostCompletedEventArgs : EventArgs
+    {
+        public bool Success { get; set; }
+
+        public PostCompletedEventArgs(bool success)
+        {
+            Success = success;
+        }
+    }
+
     public class PostSubmitter
     {
         public string Url { get; set; }
         public Dictionary<string, object> Parameters { get; set; }
-        public event EventHandler Completed;
+        public event EventHandler<PostCompletedEventArgs> Completed;
         private readonly string _boundary = "----------" + DateTime.Now.Ticks;
 
         public void Submit()
@@ -33,15 +43,21 @@ namespace PhotoRay
 
         private void GetResponseCallback(IAsyncResult asynchronousResult)
         {
-            var request = (HttpWebRequest) asynchronousResult.AsyncState;
-            var response = (HttpWebResponse) request.EndGetResponse(asynchronousResult);
-            var streamResponse = response.GetResponseStream();
-            var streamRead = new StreamReader(streamResponse);
-            streamRead.Close();
-            // Release the HttpWebResponse
-            response.Close();
-            
-            OnCompleted();
+            try
+            {
+                var request = (HttpWebRequest) asynchronousResult.AsyncState;
+                var response = (HttpWebResponse) request.EndGetResponse(asynchronousResult);
+                var streamResponse = response.GetResponseStream();
+                var streamRead = new StreamReader(streamResponse);
+                streamRead.Close();
+                // Release the HttpWebResponse
+                response.Close();
+            }
+            catch(Exception)
+            {
+                OnCompleted(false);
+            }
+            OnCompleted(true);
         }
 
 
@@ -94,12 +110,12 @@ namespace PhotoRay
             }
         }
 
-        private void OnCompleted()
+        private void OnCompleted(bool success)
         {
             var handler = Completed;
             if(handler != null)
             {
-                handler(this, null);
+                handler(this, new PostCompletedEventArgs(success));
             }
         }
     }

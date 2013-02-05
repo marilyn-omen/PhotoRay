@@ -80,7 +80,21 @@ namespace PhotoRay
                 {
                     Url = "http://photoray.org/upload.php"
                 };
-            _post.Completed += (sender, args) => Dispatcher.BeginInvoke(() => { IsUploading = false; });
+            _post.Completed += (sender, args) => Dispatcher.BeginInvoke(
+                () =>
+                    {
+                        if (!args.Success)
+                        {
+                            MessageBox.Show(
+                                AppResources.UploadErrorText,
+                                AppResources.UploadErrorTitle,
+                                MessageBoxButton.OK);
+                        }
+                        IsUploading = false;
+                    });
+            ApplicationBar =
+                App.BuildLocalizedApplicationBar(
+                    (sender, args) => NavigationService.Navigate(new Uri("/AboutView.xaml", UriKind.RelativeOrAbsolute)));
         }
 
         private void OnSelectedPictureChanged(Picture newPicture)
