@@ -37,50 +37,49 @@
               Margin="12,0,12,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Image Source="ApplicationIcon.png"
+            <Image Source="Background.png"
                    VerticalAlignment="Center" />
-            <TextBlock Text="{Binding Path=LocalizedResources.AppName, Source={StaticResource LocalizedStrings}}"
-                       Style="{StaticResource PhoneTextAccentStyle}"
-                       FontSize="{StaticResource PhoneFontSizeExtraLarge}"
-                       Grid.Column="1" />
-            <StackPanel Grid.Row="1" Grid.Column="1">
-                <TextBlock Text="by Petro Protsakh"
+            <StackPanel Grid.Column="1"
+                        Margin="0,15,0,0">
+                <TextBlock Text="{Binding Path=LocalizedResources.AppName, Source={StaticResource LocalizedStrings}}"
+                           Style="{StaticResource PhoneTextAccentStyle}"
+                           FontSize="{StaticResource PhoneFontSizeExtraLarge}"
+                           HorizontalAlignment="Center"
+                           Grid.Column="1" />
+                <TextBlock Text="{Binding Path=LocalizedResources.ByAuthor, Source={StaticResource LocalizedStrings}}"
                            Style="{StaticResource PhoneTextBlockBase}"
-                           FontSize="{StaticResource PhoneFontSizeMedium}"/>
-                <TextBlock Text="www.photoray.org"
-                           Style="{StaticResource PhoneTextAccentStyle}" />
-                <TextBlock Style="{StaticResource PhoneTextSmallStyle}"
-                           Margin="13,5,0,0">
-                    <Run Text="Version:" />
-                    <Run Text=" " />
-                    <Run Text="{Binding Path=AssemblyVersion, ElementName=_this}" />
-                </TextBlock>
+                           FontSize="{StaticResource PhoneFontSizeMedium}"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="{Binding Path=LocalizedResources.AppDisplayUrl, Source={StaticResource LocalizedStrings}}"
+                           Style="{StaticResource PhoneTextAccentStyle}"
+                           HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Grid.Row="1"
+                        Grid.ColumnSpan="2">
+                <Button Content="{Binding Path=LocalizedResources.ReviewAppText, Source={StaticResource LocalizedStrings}}"
+                        Tap="OnReviewAppTap" />
+                <Button Content="{Binding Path=LocalizedResources.SendFeedbackText, Source={StaticResource LocalizedStrings}}"
+                        Tap="OnSendFeedbackAppTap" />
             </StackPanel>
             <StackPanel Grid.Row="2"
                         Grid.ColumnSpan="2">
-                <Button Content="Review app"
-                        Tap="OnReviewAppTap" />
+                <TextBlock Style="{StaticResource PhoneTextSmallStyle}"
+                           Margin="13,5,0,0">
+                    <Run Text="{Binding Path=LocalizedResources.AppVersionText, Source={StaticResource LocalizedStrings}}" />
+                    <Run Text="{Binding Path=AssemblyVersion, ElementName=_this}" />
+                </TextBlock>
+                <TextBlock Text="{Binding Path=LocalizedResources.SourcesText, Source={StaticResource LocalizedStrings}}"
+                           Style="{StaticResource PhoneTextSmallStyle}"
+                           TextDecorations="Underline"
+                           Tap="OnSourcesTap" />
             </StackPanel>
         </Grid>
     </Grid>
-
-    <!--Sample code showing usage of ApplicationBar-->
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
-            </shell:ApplicationBar.MenuItems>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
-
 </phone:PhoneApplicationPage>

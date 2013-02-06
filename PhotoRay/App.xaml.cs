@@ -53,7 +53,7 @@ namespace PhotoRay
                 // application's PhoneApplicationService object to Disabled.
                 // Caution:- Use this under debug mode only. Application that disables user idle detection will continue to run
                 // and consume battery power when the user is not using the phone.
-                PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
+                //PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
         }
@@ -83,8 +83,7 @@ namespace PhotoRay
         // This code will not execute when the application is reactivated
         private void ApplicationLaunching(object sender, LaunchingEventArgs e)
         {
-            Thread.CurrentThread.CurrentCulture = CultureInfo.CurrentCulture;
-
+            AppResources.Culture = CultureInfo.CurrentCulture;
             if (!IsolatedStorageSettings.ApplicationSettings.Contains("FirstRun"))
             {
                 IsolatedStorageSettings.ApplicationSettings.Add("FirstRun", true);
@@ -99,6 +98,7 @@ namespace PhotoRay
         // This code will not execute when the application is first launched
         private void ApplicationActivated(object sender, ActivatedEventArgs e)
         {
+            AppResources.Culture = CultureInfo.CurrentCulture;
             if (e.IsApplicationInstancePreserved)
             {
                 return;

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Windows.Input;
 using Microsoft.Phone.Tasks;
 
@@ -18,6 +19,24 @@ namespace PhotoRay
         {
             var reviewTask = new MarketplaceReviewTask();
             reviewTask.Show();
+        }
+
+        private void OnSendFeedbackAppTap(object sender, GestureEventArgs e)
+        {
+            var emailTask = new EmailComposeTask
+            {
+                To = AppResources.SupportEmail
+            };
+            emailTask.Show();
+        }
+
+        private void OnSourcesTap(object sender, GestureEventArgs e)
+        {
+            var task = new WebBrowserTask
+            {
+                Uri = new Uri(AppResources.GitHubAddress)
+            };
+            task.Show();
         }
 
         private static string GetAppVersion()

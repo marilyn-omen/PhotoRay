@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutMenuText" xml:space="preserve">
+    <value>О программе</value>
+  </data>
   <data name="AboutPageTitle" xml:space="preserve">
     <value>О программе</value>
+  </data>
+  <data name="AppVersionText" xml:space="preserve">
+    <value>Версия программы:</value>
+  </data>
+  <data name="ByAuthor" xml:space="preserve">
+    <value>Петр Процах</value>
   </data>
   <data name="CrashMessageText" xml:space="preserve">
     <value>Приносим свои извинения, похоже, предыдущий запуск приложения завершился неудачно. Желаете ли вы отправить разработчику сведения об этой проблеме, чтобы помочь ему ее исправить и сделать PhotoRay лучше?</value>
@@ -143,6 +152,15 @@
   </data>
   <data name="NoticeTitle" xml:space="preserve">
     <value>Предупреждение</value>
+  </data>
+  <data name="ReviewAppText" xml:space="preserve">
+    <value>Оставить отзыв</value>
+  </data>
+  <data name="SendFeedbackText" xml:space="preserve">
+    <value>Обратная связь</value>
+  </data>
+  <data name="SourcesText" xml:space="preserve">
+    <value>Исходники на GitHub</value>
   </data>
   <data name="UploadErrorText" xml:space="preserve">
     <value>Не удалось отправить фото. Возможно, прервано соединение для передачи данных или Wi-Fi. Пожалуйста, проверьте настройки вашего телефона.</value>
