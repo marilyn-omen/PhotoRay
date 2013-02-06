@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Xna.Framework.Media;
@@ -101,21 +102,23 @@ namespace PhotoRay
         {
             if(newPicture != null)
             {
-                App.SelectedPictureId = new PictureId(newPicture.Name, newPicture.Date);
+                var picId = new PictureId(newPicture.Name, newPicture.Date);
+                App.SelectedPictureId = picId;
+                App.PreviousPictureId = picId;
                 if (_doNotUploadFlag)
                 {
                     _doNotUploadFlag = false;
                 }
                 else
                 {
+                    var picIdx = _allPictures.IndexOf(newPicture);
+                    var pivotIdx = Pictures.IndexOf(newPicture);
+                    var nextIdx = (pivotIdx + 1) % 3;
+                    var prevIdx = ((pivotIdx - 1) < 0) ? 2 : (pivotIdx - 1);
+                    Pictures[nextIdx] = _allPictures[LoopIncrement(picIdx)];
+                    Pictures[prevIdx] = _allPictures[LoopDecrement(picIdx)];
                     UploadPicture(newPicture);
                 }
-                var picIdx = _allPictures.IndexOf(newPicture);
-                var pivotIdx = Pictures.IndexOf(newPicture);
-                var nextIdx = (pivotIdx + 1)%3;
-                var prevIdx = ((pivotIdx - 1) < 0) ? 2 : (pivotIdx - 1);
-                Pictures[nextIdx] = _allPictures[LoopIncrement(picIdx)];
-                Pictures[prevIdx] = _allPictures[LoopDecrement(picIdx)];
             }
         }
 
@@ -179,27 +182,39 @@ namespace PhotoRay
             {
                 throw new InvalidOperationException("Client SID was not set before navigating to Photo view");
             }
-
-            _library = new MediaLibrary();
-            var album = _library.RootPictureAlbum.Albums.First(a => a.Name == App.SelectedAlbum);
-            _allPictures = new List<Picture>(album.Pictures);
-            if (_allPictures.Count == 0)
-                return;
-
-            var selectedPicture = _allPictures.First(p => App.SelectedPictureId.Equals(p));
-            var selectedIdx = _allPictures.IndexOf(selectedPicture);
-            selectedIdx = LoopDecrement(selectedIdx);
-            Pictures = new ObservableCollection<Picture>
-                {
-                    _allPictures[LoopDecrement(selectedIdx)],
-                    _allPictures[selectedIdx],
-                    _allPictures[LoopIncrement(selectedIdx)]
-                };
-            if (!e.IsNavigationInitiator)
+            if (!e.IsNavigationInitiator
+                || e.NavigationMode == NavigationMode.Back
+                || App.PreviousPictureId != null && App.PreviousPictureId.Equals(App.SelectedPictureId))
             {
                 _doNotUploadFlag = true;
             }
-            SelectedPicture = selectedPicture;
+
+            ThreadPool.QueueUserWorkItem(
+                stateInfo => Dispatcher.BeginInvoke(
+                    () =>
+                        {
+                            _library = new MediaLibrary();
+                            var album = _library.RootPictureAlbum.Albums.First(
+                                a =>
+                                a.Name == App.SelectedAlbum);
+                            _allPictures = new List<Picture>(album.Pictures);
+                            if (_allPictures.Count == 0)
+                            {
+                                return;
+                            }
+
+                            var selectedPicture = _allPictures.First(
+                                p =>
+                                App.SelectedPictureId.Equals(p));
+                            var selectedIdx = _allPictures.IndexOf(selectedPicture);
+                            Pictures = new ObservableCollection<Picture>
+                                           {
+                                               _allPictures[selectedIdx],
+                                               _allPictures[LoopIncrement(selectedIdx)],
+                                               _allPictures[LoopDecrement(selectedIdx)]
+                                           };
+                            SelectedPicture = selectedPicture;
+                        }));
         }
 
         #endregion

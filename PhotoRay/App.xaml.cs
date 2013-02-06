@@ -14,6 +14,7 @@ namespace PhotoRay
         public static string Sid { get; set; }
         public static string SelectedAlbum { get; set; }
         public static PictureId SelectedPictureId { get; set; }
+        public static PictureId PreviousPictureId { get; set; }
 
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
@@ -103,19 +104,28 @@ namespace PhotoRay
                 return;
             }
 
-            if (PhoneApplicationService.Current.State.ContainsKey("Sid"))
+            if (PhoneApplicationService.Current.State.ContainsKey("Sid")
+                && PhoneApplicationService.Current.State["Sid"] != null)
             {
                 Sid = PhoneApplicationService.Current.State["Sid"].ToString();
             }
 
-            if (PhoneApplicationService.Current.State.ContainsKey("Album"))
+            if (PhoneApplicationService.Current.State.ContainsKey("Album")
+                && PhoneApplicationService.Current.State["Album"] != null)
             {
                 SelectedAlbum = PhoneApplicationService.Current.State["Album"].ToString();
             }
 
-            if (PhoneApplicationService.Current.State.ContainsKey("Picture"))
+            if (PhoneApplicationService.Current.State.ContainsKey("Picture")
+                && PhoneApplicationService.Current.State["Picture"] != null)
             {
                 SelectedPictureId = PhoneApplicationService.Current.State["Picture"] as PictureId;
+            }
+            
+            if (PhoneApplicationService.Current.State.ContainsKey("PrevPicture")
+                && PhoneApplicationService.Current.State["PrevPicture"] != null)
+            {
+                PreviousPictureId = PhoneApplicationService.Current.State["PrevPicture"] as PictureId;
             }
         }
 
@@ -148,6 +158,15 @@ namespace PhotoRay
             else
             {
                 PhoneApplicationService.Current.State.Add("Picture", SelectedPictureId);
+            }
+
+            if (PhoneApplicationService.Current.State.ContainsKey("PrevPicture"))
+            {
+                PhoneApplicationService.Current.State["PrevPicture"] = PreviousPictureId;
+            }
+            else
+            {
+                PhoneApplicationService.Current.State.Add("PrevPicture", PreviousPictureId);
             }
         }
 

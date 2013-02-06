@@ -14,7 +14,7 @@
                             Orientation="Portrait"
                             shell:SystemTray.IsVisible="True"
                             mc:Ignorable="d"
-                            d:DesignHeight="696"
+                            d:DesignHeight="768"
                             d:DesignWidth="480">
     <Grid x:Name="LayoutRoot"
           Background="Transparent">
@@ -47,7 +47,7 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Image Source="{Binding ., Converter={StaticResource PictureToThumbnail}}"
+                                                <Image Source="{Binding Converter={StaticResource PictureToThumbnail}}"
                                                        Tag="{Binding}"
                                                        Margin="2"
                                                        Tap="OnPhotoTap" />

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{f70a0c6a-b208-474f-a6ee-bc86062cb16f}" Title="PhotoRay" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="PhotoRay author" Description="Sample description" Publisher="PhotoRay">
+  <App xmlns="" ProductID="{f70a0c6a-b208-474f-a6ee-bc86062cb16f}" Title="PhotoRay" RuntimeType="Silverlight" Version="1.0.1.0" Genre="apps.normal" Author="Petro Protsakh" Description="Show photos from your WP directly on screen." Publisher="Petro Protsakh">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_MEDIALIB" />

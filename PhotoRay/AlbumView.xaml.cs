@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -81,12 +82,19 @@ namespace PhotoRay
 
             if (_isNewPageInstance)
             {
-                _library = new MediaLibrary();
-                _isNewPageInstance = false;
-                Albums = _library.RootPictureAlbum.Albums.Where(album => album.Pictures.Count != 0).ToList();
-                SelectedAlbum = string.IsNullOrWhiteSpace(App.SelectedAlbum)
-                                    ? Albums.FirstOrDefault()
-                                    : Albums.FirstOrDefault(album => album.Name == App.SelectedAlbum);
+                ThreadPool.QueueUserWorkItem(
+                    stateInfo => Dispatcher.BeginInvoke(
+                        () =>
+                            {
+
+                                _library = new MediaLibrary();
+                                _isNewPageInstance = false;
+                                Albums =
+                                    _library.RootPictureAlbum.Albums.Where(album => album.Pictures.Count != 0).ToList();
+                                SelectedAlbum = string.IsNullOrWhiteSpace(App.SelectedAlbum)
+                                                    ? Albums.FirstOrDefault()
+                                                    : Albums.FirstOrDefault(album => album.Name == App.SelectedAlbum);
+                            }));
             }
         }
 
